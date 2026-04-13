@@ -19,5 +19,11 @@ function Operator() {
         "-": subtract,
         "/": divide,
         "*": multiply
-    }
+    };
+
+    function calculate(expression) {
+        const [a, op, b] = expression.split(" ")
+        return this[this.getOperatorName(op)](parseFloat(a), parseFloat(b));
+    };
+
 }
