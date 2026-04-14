@@ -19,10 +19,77 @@ function Operator() {
         "*": multiply
     };
 
+    const precedence = {
+        "+": 1,
+        "-": 1,
+        "/": 2,
+        "*": 2     
+    }
+
+    function applyOperator(a, b, op) {
+        return operators[op](a, b);
+    }
+
+    function parseExpression(expression) {
+        const tokens = [];
+        let currentNumber = "";
+
+        for (let i = 0; i < expression.length; i++) {
+            const char = expression[i];
+
+            if((char >= "0" && char <= "9" || char === ".")) {
+                currentNumber += char;
+            } else if (char === "+" || char === "-" || char === "*" || char === "/") {
+                if(currentNumber) {
+                    tokens.push(parseFloat(currentNumber));
+                    currentNumber = "";
+                }
+                tokens.push(char);
+            }
+        }
+
+        if(currentNumber) {
+            tokens.push(parseFloat(currentNumber))
+        }
+        return tokens;
+    }
+
+    function evaluateExpression (tokens) {
+        const values = [];
+        const ops = [];
+
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
+
+            if (typeof token === "number") {
+                values.push(token);
+            }
+            else {
+                while (ops.length > 0 && precedence[ops[ops.length - 1]] >= precedence[token]) {
+                    const b = values.pop();
+                    const a = values.pop();
+                    const op = ops.pop();
+                    values.push(applyOperator(a, b, op));
+                }
+                ops.push(token);
+            }
+        }
+
+        while(ops.length > 0) {
+            const b = values.pop();
+            const a = values.pop();
+            const op = ops.pop();
+            values.push(applyOperator(a, b, op));
+        }
+        return values[0];
+    }
+
     return { 
         calculate(expression) {
-        const [a, op, b] = expression;
-        return operators[op](parseFloat(a), parseFloat(b));
+        const cleanExpression = expression.replace(/\s/g, '');
+        const token = parseExpression(cleanExpression);
+        const result = evaluateExpression(token);
+        return Math.round(result * 1000000) / 1000000;
         }
     };
 }
