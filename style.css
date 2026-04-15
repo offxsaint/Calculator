@@ -1,0 +1,21 @@
+.calculator {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    flex-direction: column;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.expression, .result {
+    display: flex;
+    width: fit-content;
+    padding: 0.5em;
+    padding-left: 2.5em;
+    padding-right: 2.5em;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+button {
+    padding: 1em;
+}
